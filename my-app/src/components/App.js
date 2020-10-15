@@ -1,51 +1,40 @@
 import React, { Component } from 'react';
 import styled from 'styled-components'
- 
+import { connect } from "react-redux";
+import { increment, decrement } from "../actions";
 
-//functional componentsの記述
-const App  = () => (<Counter></Counter>)
-
-class Counter extends Component {
-  constructor(props) {
-    super(props)
-    console.log(this.state)
-    this.state = {
-      count : 0
-    }
-  }
-  handlePlusButton = () => {
-    console.log("Plus!")
-    this.setState({ count : this.state.count + 1})
-  }
-  handleMinusButton = () => {
-    console.log("Minus!")
-    this.setState({ count: this.state.count -1})
-  }
-  handleResetButton = () => {
-    console.log("Restart!")
-    this.setState({count: 0})
-  }
-
+class App extends Component {
   render() {
+    const props = this.props
     return (
       <>
-        <Title>count : {this.state.count}</Title>
+        <Title>value : {props.value}</Title>
         <Container>
-          <Button onClick={this.handlePlusButton}>+1</Button>
-          <Button onClick={this.handleMinusButton}>-1</Button>
-          <Button onClick={this.handleResetButton}>reset</Button>
+          <Button onClick={props.increment}>+1</Button>
+          <Button onClick={props.decrement}>-1</Button>
         </Container>
       </>
     )
   }
-} 
+}
+
+const mapStateToProps = state => ({ value: state.count.value })
+const mapDispatchToProps = dispatch => ({
+  increment: () => dispatch(increment()),
+  decrement: () => dispatch(decrement())
+})
+
+// mapDispatchToProps の省略形
+// const mapDispatchToProps = ({ increment, decrement})
 
 
- 
+export default connect(mapStateToProps, mapDispatchToProps)(App)
+
+
 // StyledComponentの実装
 const Title = styled.h1`
   font-size:60px;
-  background-color:lightblue;
+  background-color: lightblue;
   margin: 0;
   position: absolute;
   top: 50%;
@@ -87,4 +76,3 @@ const Container = styled.div`
   display:flex;
   justify-content:center;
 `
-export default App;
